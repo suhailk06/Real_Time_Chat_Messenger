@@ -35,4 +35,8 @@ urlpatterns = [
     path('friend_list/<int:user_id>/', views.friend_list, name='friend_list'),
     path('search_page/',views.search_page,name='search_page'),
     path('edit_page/<int:user_id>/', views.edit_page, name='edit_page'),
+    path('edit_username/<int:user_id>/',views.edit_username,name='edit_username'),
+    path('edit_email/<int:user_id>/',views.edit_email,name='edit_email'),
+    path('edit_password/<int:user_id>/',views.edit_password,name='edit_password'),
+    path('verify_password/<int:user_id>/',views.verify_password,name='verify_password'),
 ]

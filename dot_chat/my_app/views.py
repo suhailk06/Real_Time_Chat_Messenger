@@ -266,6 +266,7 @@ def verify_otp(request, user_id):
         if otp == request.session.get('otp'):
             user = UserData.objects.get(id=user_id)
             user.is_verified = True
+            user.email=request.session.get('email')
             user.save()
             messages.success(request, 'Your account has been verified. You can now log in.')
             return redirect('login')
@@ -284,9 +285,146 @@ def edit_page(request,user_id):
     user = UserData.objects.get(id=request.session.get('user_id'))
     return render(request, 'edit_page.html', {'user_id': user_id,'user':user})
     
-def edit_username(request):
-    pass
+def edit_username(request, user_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    
+    # Check if the user is trying to edit their own profile
+    if user_id != request.session.get('user_id'):
+        return redirect('home')  # or show error
+    
+    # Get the user object first
+    user = UserData.objects.get(id=request.session.get('user_id'))
+    
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        
+        # Check if username already exists (excluding current user)
+        if UserData.objects.exclude(id=user.id).filter(username=username).exists():
+            # Handle duplicate username
+            return render(request, 'edit_username.html', {
+                'user_id': user_id,
+                'user': user,
+                'error': 'Username already taken'
+            })
+        
+        # Update username if it's valid
+        if username:  # Make sure username is not empty
+            user.username = username
+            user.save()
+            messages.success(request, 'Username updated successfully!')
+            return redirect('edit_page', user_id=user.id)  # Redirect to edit page
+    
+    return render(request, 'edit_username.html', {
+        'user_id': user_id,
+        'user': user
+    })
+  
 
+def verify_password(request,user_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+        
+        # Check if the user is trying to edit their own profile
+    if user_id != request.session.get('user_id'):
+        return redirect('home')
+    user = UserData.objects.get(id=request.session.get('user_id'))
+    if request.method=='POST':
+        password = request.POST.get('password', '')
+        if check_password(password, user.password):
+            request.session['user_id'] = user.id
+            request.session['username'] = user.username
+            return redirect('edit_password',user_id=user.id)
+        
+    return render(request, 'verify_password.html', {
+        'user_id': user_id,
+        'user': user
+    })
+      
+
+def edit_password(request, user_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    
+    # Check if the user is trying to edit their own profile
+    if user_id != request.session.get('user_id'):
+        return redirect('home')
+    
+    user = UserData.objects.get(id=request.session.get('user_id'))
+    
+    if request.method == 'POST':
+        password = request.POST.get('password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()  # Fixed field name
+        
+        # Validate password
+        if not password:
+            messages.error(request, 'Password is required.')
+        elif len(password) < 8:
+            messages.error(request, 'Password must be at least 8 characters long.')
+        elif password.isdigit():
+            messages.error(request, 'Password cannot be entirely numeric.')
+        elif not any(char.isupper() for char in password):
+            messages.error(request, 'Password must contain at least one uppercase letter.')
+        elif not any(char.islower() for char in password):
+            messages.error(request, 'Password must contain at least one lowercase letter.')
+        elif not any(char.isdigit() for char in password):
+            messages.error(request, 'Password must contain at least one number.')
+        elif password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+        else:
+            # All validations passed
+            user.password = make_password(password)
+            user.save()
+            messages.success(request, 'Password updated successfully!')
+            return redirect('edit_page', user_id=user.id)  # Redirect to edit page with success message
+    
+    return render(request, 'edit_password.html', {
+        'user_id': user_id,
+        'user': user
+    })    
+    
+    
+def edit_email(request, user_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    
+    # Check if the user is trying to edit their own profile
+    if user_id != request.session.get('user_id'):
+        return redirect('home')  # or show error
+    
+    # Get the user object first
+    user = UserData.objects.get(id=request.session.get('user_id'))
+    
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        if UserData.objects.filter(email=email).exists():
+            return render(request, 'edit_email.html', {
+                    'user_id': user_id,
+                    'user': user
+                })
+            
+        request.session['email']=email
+        otp = str(random.randint(100000, 999999))
+        request.session['otp']=otp
+        request.session['user_id'] = user.id
+        user.verified_otp=otp
+        user.save()
+                    
+        
+        email_message = f"Your verification code is: {otp}"
+        send_mail(
+                            "Email Verification Code",
+                            email_message,
+                            settings.DEFAULT_FROM_EMAIL,
+                            [email],
+                            fail_silently=False,
+                        )
+        return redirect('verify_otp', user_id=user.id)
+    
+    return render(request, 'edit_email.html', {
+        'user_id': user_id,
+        'user': user
+    })
 
 def register_page(request):
     UserData.objects.filter(is_verified=False).delete()
@@ -308,8 +446,8 @@ def register_page(request):
             errors['username'] = 'Username is required.'
         elif UserData.objects.filter(username=username).exists():
             errors['username'] = 'This username is already taken.'
-        elif len(username) < 3:
-            errors['username'] = 'Username must be at least 3 characters long.'
+        elif len(username) < 5:
+            errors['username'] = 'Username must be at least 5 characters long.'
         elif not re.match(r'^[a-zA-Z0-9_]+$', username):
             errors['username'] = 'Username can only contain letters, numbers, and underscores.'
         
@@ -370,6 +508,7 @@ def register_page(request):
             
             request.session['otp'] = otp
             request.session['user_id'] = user.id
+            request.session['email']=email
             
             try:
                 email_message = f"Your verification code is: {otp}"
