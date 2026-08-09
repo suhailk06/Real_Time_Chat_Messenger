@@ -20,10 +20,15 @@ background-attachment: fixed;
               margin-top: 20px;
               margin-left: 20px;
               margin-right: 20px;
-                background-color: #000000;
-                border: 5px solid #ffffff;
+background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+              
                 border-radius: 25px;
             }
+            
             </style>
     </head>
     <body>
@@ -31,8 +36,11 @@ background-attachment: fixed;
   <nav class="navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="/home"><img src="{% static 'images/dot_chat_logo.png' %}" alt="logo" width=50></a>
-    <a class="navbar-brand" style="color:white" href="/logout/">logout</a>
-    <div>
+  <div> 
+    {% block search_content%}
+    {%endblock%}
+</div>
+     <div>
     <a href="/search_page"><i class="fas fa-user-plus me-2" style="color:white"></i></button></a>
     {%block nav_content%}
     {%endblock%}
@@ -40,6 +48,9 @@ background-attachment: fixed;
     </div>
   </div>
 </nav>
+  <a href="{% url 'home' %}" style="position: fixed; ">
+    <img src="{% static 'images/back_button.png' %}" width="100" alt="Back to Home">
+</a>
 <div class="dot_chat_background">
 {% block content %}
 {% endblock %}

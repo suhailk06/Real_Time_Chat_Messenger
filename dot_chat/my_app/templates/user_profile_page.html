@@ -27,6 +27,9 @@
         </style>
 </head>
 <body>
+  <a href="{% url 'home' %}" style="position: fixed; ">
+    <img src="{% static 'images/back_button.png' %}" width="100" alt="Back to Home">
+</a>
         <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="profile-card">
             <div>
@@ -40,9 +43,14 @@
                         </a></h1>
             <div>
                 {% if friend_status == 'self' %}
+                <div>
                         <a href="/#">
                             <button class="btn" style="background: black; color: white;">Edit Profile</button>
                         </a>
+                                                <a href="{%url 'logout' %}">
+                            <button class="btn" style="background: black; color: white;">Logout</button>
+                        </a>
+                    </div>
                 {% elif friend_status == 'friend' %}
                         <a href="{% url 'message_page' receiver_id=user.id %}">
                             <button class="btn" style="background: black; color: white;">Send Message</button>
