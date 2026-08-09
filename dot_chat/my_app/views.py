@@ -78,6 +78,20 @@ def home(request):
         'user': user
     })
 
+def search_page(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        user = UserData.objects.filter(username=username).first()  # Get first result or None
+        if user:  # Check if user exists
+            return redirect('user_profile', user.id)
+        else:
+            messages.error(request, 'User not found!')
+    user_id = request.session.get('user_id')
+    user = UserData.objects.get(id=user_id)
+    return render(request, 'search_page.html', {'user': user})
+
 def user_profile(request, user_id):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -186,9 +200,12 @@ def friend_list(request, user_id):
             no_status_users.append(user)
     
     ordered_users = self_user + friend_users + pending_received_users + pending_sent_users + no_status_users
-    return render(request, 'friend_list_page.html', {'friends': ordered_users})
+    user = UserData.objects.get(id=user_id)
+    return render(request, 'friend_list_page.html', {'friends': ordered_users,'user':user})
 
-def search_page(request):
+
+
+def request_page(request):
     if 'user_id' not in request.session:
         return redirect('login')
     
@@ -240,7 +257,8 @@ def search_page(request):
             no_status_users.append(user)
     
     ordered_users = pending_received_users + pending_sent_users + no_status_users
-    return render(request, 'search_page.html', {'users': ordered_users, 'req': req})
+    user = UserData.objects.get(id=user_id)
+    return render(request, 'request_page.html', {'users': ordered_users, 'req': req,'user':user})
 
 def verify_otp(request, user_id):
     if request.method == 'POST':
@@ -255,6 +273,20 @@ def verify_otp(request, user_id):
             messages.error(request, 'Invalid OTP. Please try again.')
             return redirect('verify_otp', user_id=user_id)
     return render(request, 'verify_otp.html', {'user_id': user_id})
+
+
+
+def edit_page(request,user_id):
+    if 'user_id' not in request.session:
+            return redirect('login')
+    if user_id==request.session.get('user_id'):
+        pass
+    user = UserData.objects.get(id=request.session.get('user_id'))
+    return render(request, 'edit_page.html', {'user_id': user_id,'user':user})
+    
+def edit_username(request):
+    pass
+
 
 def register_page(request):
     UserData.objects.filter(is_verified=False).delete()

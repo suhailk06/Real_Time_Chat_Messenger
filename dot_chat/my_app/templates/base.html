@@ -37,11 +37,12 @@ background: rgba(255, 255, 255, 0.3);
   <div class="container-fluid">
     <a class="navbar-brand" href="/home"><img src="{% static 'images/dot_chat_logo.png' %}" alt="logo" width=50></a>
   <div> 
-    {% block search_content%}
+    {% block page_content%}
     {%endblock%}
 </div>
      <div>
-    <a href="/search_page"><i class="fas fa-user-plus me-2" style="color:white"></i></button></a>
+      <a href="/search_page"><i class="fas fa-search" style="color:white;padding-right:10px;"></i></button></a>
+    <a href="/request_page"><i class="fas fa-user-plus me-2" style="color:white"></i></button></a>
     {%block nav_content%}
     {%endblock%}
     </div>

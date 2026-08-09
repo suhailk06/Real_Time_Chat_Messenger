@@ -34,7 +34,7 @@
         <div class="profile-card">
             <div>
            <h1>
-           <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Profile picture" class="card-img-top" style="width: 150px; height: 150px; border-radius: 50%;">
+           <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Profile picture" class="card-img-top" style="width: 150px; height: 150px;border:3px solid white; border-radius:50%">
 {{ user.username }}</h1>
             </div>
             <p>{{user.bio}}</p>
@@ -44,7 +44,7 @@
             <div>
                 {% if friend_status == 'self' %}
                 <div>
-                        <a href="/#">
+                        <a href="{%url 'edit_page' user_id=user.id %}">
                             <button class="btn" style="background: black; color: white;">Edit Profile</button>
                         </a>
                                                 <a href="{%url 'logout' %}">

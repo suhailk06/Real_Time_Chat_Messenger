@@ -1,14 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{%block search_content%}
-<form class="d-flex" role="search">
-    <input class="form-control me-2" 
-           style="background: black; color: white;" 
-           type="search" 
-           aria-label="Search"/>
-    <button class="btn" style="background: black; color: white;">Search</button>
-</form>
-{%endblock%}
 {%block nav_content%}
 {%if req > 0 %}
     <a class="navbar-brand disabled" style="color:white" href="/search_page">Requests ({{ req }})</a>

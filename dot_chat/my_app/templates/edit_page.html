@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dot Chat · Update Profile</title>
+    <!-- Bootstrap 5 + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: url({% static 'images/dot_chat_background.png' %});
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1rem;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* main glass-card container */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 2rem 2rem 2.5rem;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        /* decorative mini cards – each shows a "change profile pic" option */
+        .mini-card {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 28px;
+            padding: 0.9rem 1.2rem;
+            margin: 0.8rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+            transition: transform 0.15s ease, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+        }
+
+
+
+
+
+        .mini-card .card-body-text {
+            flex: 1;
+            font-weight: 500;
+            color: #1e2a3a;
+            letter-spacing: -0.01em;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+
+
+        .main-title {
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+            color: #0b1a2b;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+
+
+
+
+
+
+        .profile-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            padding: 0.2rem 1.2rem 0.2rem 0.6rem;
+            margin: 0.5rem auto 1.8rem;
+            max-width: fit-content;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+
+    <!-- header -->
+    <div class="main-title">
+        <i class="fas fa-user"></i>
+        
+        <span>Edit Profile</span>
+    </div>
+
+
+    <!-- profile preview (decorative) -->
+    <div class="profile-preview">
+<a href="{% url 'user_profile' user_id=user.id %}" >
+    <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Logo" width=35 style="border:2px solid white;border-radius:50%;">
+</a>
+        <span style="font-weight: 500; color: #1f3147;">@{{user.username}}</span>
+    </div>
+
+
+    <div class="mini-card">
+        <span class="card-body-text">Change Avatar:<img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Logo" width=35 style="border:2px solid white;border-radius:50%;">
+        </span>
+        <span class="card-badge"><i class="fa fa-edit"></i></span>
+    </div>
+
+    <div class="mini-card">
+        <span class="card-body-text"> Change Username:({{user.username}})
+        </span>
+        <span class="card-badge"><i class="fa fa-edit"></i></span>
+    </div>
+
+    <div class="mini-card">
+        <span class="card-body-text">Change Email:({{user.email}})
+        </span>
+        <span class="card-badge"><i class="fa fa-edit"></i></span>
+    </div>
+
+    <div class="mini-card">
+        <span class="card-body-text">Change Password
+        </span>
+        <span class="card-badge"><i class="fa fa-edit"></i></span>
+    </div>
+    
+</div>
+
+<!-- Bootstrap JS (optional for any toggles) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

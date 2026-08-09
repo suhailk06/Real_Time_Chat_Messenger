@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
     path('home/',views.home,name='home'),
-    path('search_page/',views.search_page,name='search_page'),
+    path('request_page/',views.request_page,name='request_page'),
     path('register/',views.register_page,name='register'),
     path('login/',views.login_page,name='login'),
     path('logout/',views.logout_page,name='logout'),
@@ -33,4 +33,6 @@ urlpatterns = [
     path('verify_otp/<int:user_id>/', views.verify_otp, name='verify_otp'),
     path('user_profile/<int:user_id>/', views.user_profile, name='user_profile'),
     path('friend_list/<int:user_id>/', views.friend_list, name='friend_list'),
+    path('search_page/',views.search_page,name='search_page'),
+    path('edit_page/<int:user_id>/', views.edit_page, name='edit_page'),
 ]

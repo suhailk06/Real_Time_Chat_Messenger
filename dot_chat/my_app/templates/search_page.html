@@ -1,54 +1,70 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
-<div class="container text-center" style="margin-top: 2rem; margin-bottom: 2rem;">
-    <div class="row">
-        {% for user in users %}
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="card">
-                    <a href="{% url 'user_profile' user_id=user.id %}" style="border:5px solid white;border-radius:50%;">
-                        <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Profile picture" class="card-img-top" >
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ user.username }}</h5>
-                    </div>
-
-                    {% if user.status == 'pending_sent' %}
-                        <div id="requestbutton">
-                            <button class="btn btn-dark" disabled>Request Sent</button>
-                            <a href="{% url 'cancel_friend_request' receiver_id=user.id %}">
-                                <button class="btn" style="background: black; color: white;">Cancel</button>
-                            </a>
-                        </div>
-                    {% elif user.status == 'pending_received' %}
-                        <a href="{% url 'add_friend' receiver_id=user.id %}">
-                            <button class="btn" style="background: #214ec1; color: white;">Accept Request</button>
-                        </a>
-                    {% else %}
-                        <a href="{% url 'add_friend' receiver_id=user.id %}">
-                            <button class="btn" style="background: black; color: white;">Add Friend</button>
-                        </a>
-                    {% endif %}
-
-                </div>
-            </div>
-        {% empty %}
-            <p style="color: white;">No users found to add as friends.</p>
-        {% endfor %}
-    </div>
-</div>
-
-<style>
-    .card {
-        background: rgba(255, 255, 255, 0.3);
+{%load static%}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            body{
+                background-image: url({% static 'images/dot_chat_background.png' %});
+background-attachment: fixed;
+  
+            }
+            .navbar{
+              margin-top: 20px;
+              margin-left: 20px;
+              margin-right: 20px;
+background: rgba(255, 255, 255, 0.3);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(8px);
-        border-radius: 30px;
-        padding: 0.5rem 1.8rem;
-        max-width: 500px;
-        width: 100%;
-        height: 85%;
-    }
-</style>
-{% endblock %}
+            border: 1px solid rgba(255, 255, 255, 0.2);
+              
+                border-radius: 25px;
+            }
+            
+            </style>
+    </head>
+    <body>
+
+  <nav class="navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/home"><img src="{% static 'images/dot_chat_logo.png' %}" alt="logo" width=50></a>
+  <div> 
+    <form method="post" novalidate>
+                {% csrf_token %}
+    <input type="text"
+                           name="username"
+                           id="username"
+                           placeholder="Enter username">
+    <button type="submit" class="btn btn-dark">Search<i class="fas fa-search" style="padding-left:10px"></i>
+                </button>
+</div>
+     <div>
+      <a href="/search_page"><i class="fas fa-search" style="color:white;padding-right:10px;"></i></button></a>
+    <a href="/request_page"><i class="fas fa-user-plus me-2" style="color:white"></i></button></a>
+    <a href="{% url 'user_profile' user_id=user.id %}" >
+    <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Logo" width=35>
+</a>
+    </div>
+    </div>
+  </div>
+</nav>
+  <a href="{% url 'home' %}" style="position: fixed; ">
+    <img src="{% static 'images/back_button.png' %}" width="100" alt="Back to Home">
+</a>
+<div class="dot_chat_background">
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    </body>
+</html>
