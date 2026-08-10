@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{%block page_header%}
+<h1>Home Page</h1>
+{%endblock%}
 {%block nav_content%}
 {%if req > 0 %}
     <a class="navbar-brand disabled" style="color:white" href="/search_page">Requests ({{ req }})</a>

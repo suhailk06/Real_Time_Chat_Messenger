@@ -77,21 +77,84 @@ def home(request):
         'unseen_messages': unseen_messages, 
         'user': user
     })
-
 def search_page(request):
     if 'user_id' not in request.session:
         return redirect('login')
+    
+    current_user_id = request.session.get('user_id')
+    current_user = UserData.objects.get(id=current_user_id)
+    
+    ordered_users = []
+    
     if request.method == 'POST':
         username = request.POST.get('username')
-        user = UserData.objects.filter(username=username).first()  # Get first result or None
-        if user:  # Check if user exists
-            return redirect('user_profile', user.id)
-        else:
-            messages.error(request, 'User not found!')
-    user_id = request.session.get('user_id')
-    user = UserData.objects.get(id=user_id)
-    return render(request, 'search_page.html', {'user': user})
-
+        
+        # Fix: Check if username is None or empty
+        if not username:  # This handles None, empty string, or whitespace
+            messages.warning(request, 'Please enter a username to search')
+            return render(request, 'search_page.html', {'user': current_user, 'users': []})
+        
+        # Search for users containing the search term
+        users = UserData.objects.filter(username__icontains=username)
+        
+        # Initialize lists
+        self_user = []
+        friend_users = []
+        pending_received_users = []
+        pending_sent_users = []
+        no_status_users = []
+        req = 0
+        
+        for user in users:
+            # Check if they are friends (any direction)
+            friend = FriendListDATA.objects.filter(
+                Q(user_id=current_user_id, friend_id=user.id) | 
+                Q(user_id=user.id, friend_id=current_user_id)
+            ).first()
+            
+            # Check pending sent by current user
+            pending_sent = FriendListDATA.objects.filter(
+                user_id=current_user_id, 
+                friend_id=user.id, 
+                status='pending'
+            ).exists()
+            
+            # Check pending received by current user
+            pending_received = FriendListDATA.objects.filter(
+                user_id=user.id, 
+                friend_id=current_user_id, 
+                status='pending'
+            ).exists()
+            
+            # Categorize the user
+            if user.id == current_user_id:
+                user.status = 'self'
+                self_user.append(user)
+            elif friend:
+                user.status = 'friend'
+                friend_users.append(user)
+            elif pending_sent:
+                user.status = 'pending_sent'
+                pending_sent_users.append(user)
+            elif pending_received:
+                user.status = 'pending_received'
+                pending_received_users.append(user)
+                req += 1
+            else:
+                user.status = 'none'
+                no_status_users.append(user)
+        
+        # Order: self (current user) first, then friends, then pending, then others
+        ordered_users = self_user + friend_users + pending_received_users + pending_sent_users + no_status_users
+        
+        if not ordered_users:
+            messages.info(request, f'No users found matching "{username}"')
+    
+    return render(request, 'search_page.html', {
+        'user': current_user,
+        'users': ordered_users,
+        'req': req if request.method == 'POST' else 0  # Optional: pass req count to template
+    })
 def user_profile(request, user_id):
     if 'user_id' not in request.session:
         return redirect('login')
