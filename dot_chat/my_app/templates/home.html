@@ -9,7 +9,7 @@
 
 {%endif%}
 <a href="{% url 'user_profile' user_id=user.id %}" >
-    <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Logo" width=35>
+    <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Logo" width=35 style="border:2px solid white;border-radius:50%;">
 </a>
 
 {% endblock %}

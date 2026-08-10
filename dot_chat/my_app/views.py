@@ -1,6 +1,8 @@
 from email.mime import message
 import random
 import re
+from django.utils import timezone
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -70,13 +72,40 @@ def home(request):
     unseen_messages = set(MessageData.objects.filter(
         receiver_id=user_id, seen=False).values_list('sender_id', flat=True))
     
+    # Separate friends with and without messages
+    friends_with_messages = []
+    friends_without_messages = []
+    
+    for user in friends:
+        # Get the latest message between current user and this friend
+        latest_message = MessageData.objects.filter(
+            Q(sender_id=user.id, receiver_id=user_id) |
+            Q(sender_id=user_id, receiver_id=user.id)
+        ).order_by('-message_time').first()
+        
+        if latest_message:
+            user.latest_message_time = latest_message.message_time
+            user.latest_message_text = latest_message.message[:50]
+            friends_with_messages.append(user)
+        else:
+            user.latest_message_text = "No messages yet"
+            friends_without_messages.append(user)
+    
+    # Sort friends with messages by time (most recent first)
+    friends_with_messages.sort(key=lambda x: x.latest_message_time, reverse=True)
+    
+    # Combine: users with messages first (sorted by recent time), then users without messages
+    friends_with_time = friends_with_messages + friends_without_messages
+    
     user = UserData.objects.get(id=user_id)
     return render(request, 'home.html', {
-        'friends': friends, 
+        'friends': friends_with_time,
         'req': req, 
         'unseen_messages': unseen_messages, 
         'user': user
     })
+    
+    
 def search_page(request):
     if 'user_id' not in request.session:
         return redirect('login')
