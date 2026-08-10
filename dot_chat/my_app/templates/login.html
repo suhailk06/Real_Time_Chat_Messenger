@@ -247,7 +247,9 @@
                         <div class="error-message">{{ errors.password }}</div>
                     {% endif %}
                 </div>
-
+                <div class="register-link">
+<a href="{% url 'forgot_password' %}">forgot password</a>
+                </div>
                 <button type="submit" class="btn btn-dark">
                     <i class="fas fa-sign-in-alt me-2"></i>Login
                 </button>

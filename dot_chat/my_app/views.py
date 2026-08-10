@@ -382,6 +382,47 @@ def edit_password(request, user_id):
         'user_id': user_id,
         'user': user
     })    
+
+def forgot_password(request):
+    if request.method=='POST':
+        username=request.POST.get('username')
+        user = UserData.objects.get(username=username)
+        otp = str(random.randint(100000, 999999))
+        request.session['otp']=otp
+        request.session['user_id'] = user.id
+        user.verified_otp=otp
+        user.save()
+        email_message = f"Your verification code is: {otp}"
+        send_mail(
+        "Email Verification Code",
+                                email_message,
+                                settings.DEFAULT_FROM_EMAIL,
+                                [user.email],
+                                fail_silently=False,
+                            )
+        return redirect('verify_password_otp', user_id=user.id)
+    return render(request,'forgot_password.html')
+
+
+
+def verify_password_otp(request,user_id):
+    if 'user_id' not in request.session:
+                return redirect('login')
+            
+            # Check if the user is trying to edit their own profile
+    if user_id != request.session.get('user_id'):
+        return redirect('home') 
+    user = UserData.objects.get(id=request.session.get('user_id'))
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        if otp == request.session.get('otp'):
+                messages.success(request, 'Your account has been verified. You can now log in.')
+                return redirect('edit_password',user_id=user.id)
+        else:
+            messages.error(request, 'Invalid OTP. Please try again.')
+            return redirect('verify_password_otp', user_id=user_id)
+    return render(request, 'verify_otp.html', {'user_id': user_id})
+    
     
     
 def edit_email(request, user_id):

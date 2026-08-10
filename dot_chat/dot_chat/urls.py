@@ -38,5 +38,7 @@ urlpatterns = [
     path('edit_username/<int:user_id>/',views.edit_username,name='edit_username'),
     path('edit_email/<int:user_id>/',views.edit_email,name='edit_email'),
     path('edit_password/<int:user_id>/',views.edit_password,name='edit_password'),
+    path('forgot_password/',views.forgot_password,name='forgot_password'),
     path('verify_password/<int:user_id>/',views.verify_password,name='verify_password'),
+    path('verify_password_otp/<int:user_id>/',views.verify_password_otp,name='verify_password_otp'),
 ]
