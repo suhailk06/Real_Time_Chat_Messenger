@@ -560,8 +560,11 @@ def edit_email(request, user_id):
     })
 
 def register_page(request):
-    UserData.objects.filter(is_verified=False).delete()
     
+    session_keys = ['user_id', 'username', 'user_email']
+    for key in session_keys:
+        if key in request.session:
+            del request.session[key]
     if 'user_id' in request.session:
         return redirect('home')
     
@@ -665,8 +668,10 @@ def register_page(request):
     return render(request, 'register.html')
 
 def login_page(request):
-    UserData.objects.filter(is_verified=False).delete()
-    
+    session_keys = ['user_id', 'username', 'user_email']
+    for key in session_keys:
+        if key in request.session:
+            del request.session[key]
     if 'user_id' in request.session:
         return redirect('home')
     
@@ -677,6 +682,26 @@ def login_page(request):
         try:
             user_data = UserData.objects.get(username=username)
             if check_password(password, user_data.password):
+                # Check if user is verified FIRST
+                if not user_data.is_verified:
+                    otp = str(random.randint(100000, 999999))
+                    user_data.verified_otp=otp
+                    user_data.save()
+                    request.session['otp'] = otp
+                    request.session['email']=user_data.email
+                    request.session['user_id'] = user_data.id  # ✅ Set session BEFORE redirect
+                    email_message = f"Your verification code is: {otp}"
+                    send_mail(
+                        "Email Verification Code",
+                        email_message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user_data.email],
+                        fail_silently=False,
+                    )
+                    messages.warning(request, 'Please verify your email first.')
+                    return redirect('verify_otp', user_id=user_data.id)
+                
+                # User is verified, proceed with login
                 request.session['user_id'] = user_data.id
                 request.session['username'] = user_data.username
                 return redirect('home')
