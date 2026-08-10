@@ -753,7 +753,7 @@ def message_page(request, receiver_id):
         Q(sender=sender, receiver=receiver) |
         Q(sender=receiver, receiver=sender)
     ).order_by('message_time')
-    
+    user=UserData.objects.get(id=sender_id)
     return render(request, 'message_page.html', {
         'sender': sender,
         'receiver': receiver,
@@ -761,6 +761,7 @@ def message_page(request, receiver_id):
         'sender_id': sender_id,
         'messages': messages_list,
         'username': sender.username,
+        'user':user
     })
 
 def add_friend(request, receiver_id):

@@ -1,17 +1,58 @@
-{% extends "base.html" %}
-{% load static %}
-{%block nav_content%}
-<a href="{% url 'user_profile' user_id=user.id %}" >
-    <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Logo" width=35 style="border:2px solid white; border-radius:50%">
+{%load static%}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            body{
+                background-image: url({% static 'images/dot_chat_background.png' %});
+background-attachment: fixed;
+  
+            }
+            .navbar{
+              margin-top: 20px;
+              margin-left: 20px;
+              margin-right: 20px;
+background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+              
+                border-radius: 25px;
+            }
+            
+            </style>
+    </head>
+    <body>
+
+  <nav class="navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/home"><img src="{% static 'images/dot_chat_logo.png' %}" alt="logo" width=50></a>
+  <div> 
+    <h1>Friends List Of {{user.username}}</h1>
+
+  </div>
+</nav>
+<body>
+      <a href="{% url 'home' %}" style="position: fixed; ">
+    <img src="{% static 'images/back_button.png' %}" width="100" alt="Back to Home">
 </a>
-{%endblock%}
-{% block content %}
 <div class="container text-center" style="margin-top: 2rem; margin-bottom: 2rem;">
     <div class="row">
         {% for user in friends %}
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="card">
+                    <a href="{% url 'user_profile' user_id=user.id %}" >
                     <img src="{% static 'images/' %}{{ user.profile_pic }}" alt="Profile picture" class="card-img-top" style="border:5px solid white; border-radius:50%">
+                    </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ user.username }}</h5>
                     </div>
@@ -70,4 +111,5 @@
         height: 85%;
     }
 </style>
-{% endblock %}
+</body>
+</html>

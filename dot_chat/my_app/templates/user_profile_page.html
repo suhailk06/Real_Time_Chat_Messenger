@@ -39,7 +39,7 @@
             </div>
             <p>{{user.bio}}</p>
             <h1><a href="{% url 'friend_list' user_id=user.id %}">
-                            <button class="btn" style="background: black; color: white;">Friend: {{ friend_ids|length }}</button>
+                            <button class="btn" style="background: black; color: white;">Friends: {{ friend_ids|length }}</button>
                         </a></h1>
             <div>
                 {% if friend_status == 'self' %}
