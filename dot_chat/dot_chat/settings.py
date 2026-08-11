@@ -75,17 +75,27 @@ WSGI_APPLICATION = 'dot_chat.wsgi.application'
 
 # settings.py - Remove any cx_Oracle.init_oracle_client() lines
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.oracle',  # This still works with oracledb
+#         'NAME': '127.0.0.1:1522/xepdb1',
+#         'USER': 'dot_chat',
+#         'PASSWORD': 'root',
+#         'HOST': '',
+#         'PORT': '',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',  # This still works with oracledb
-        'NAME': '127.0.0.1:1522/xepdb1',
-        'USER': 'dot_chat',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dot_chat',
+        'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': '',
-        'PORT': '',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
