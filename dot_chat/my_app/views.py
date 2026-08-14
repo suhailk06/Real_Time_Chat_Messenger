@@ -184,6 +184,8 @@ def search_page(request):
         'users': ordered_users,
         'req': req if request.method == 'POST' else 0  # Optional: pass req count to template
     })
+
+
 def user_profile(request, user_id):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -221,6 +223,9 @@ def user_profile(request, user_id):
         user_id=user_id, friend_id=current_user_id, status='pending'
     ).exists():
         friend_status = "pending_received"
+    else:
+        # ✅ ADD THIS - Handle "no relationship" case
+        friend_status = "none"  # or "not_friends" or "no_status"
     
     return render(request, 'user_profile_page.html', {
         'user': user,
@@ -824,7 +829,7 @@ def add_friend(request, receiver_id):
     except UserData.DoesNotExist:
         pass
     
-    return redirect('search_page')
+    return redirect('request_page')
 
 def delete_friend(request, receiver_id):
     if 'user_id' not in request.session:
@@ -863,4 +868,4 @@ def cancel_friend_request(request, receiver_id):
     except FriendListDATA.DoesNotExist:
         pass
     
-    return redirect('search_page')
+    return redirect('request_page')

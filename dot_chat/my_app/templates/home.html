@@ -5,7 +5,7 @@
 {%endblock%}
 {%block nav_content%}
 {%if req > 0 %}
-    <a class="navbar-brand disabled" style="color:white" href="/search_page">Requests ({{ req }})</a>
+    <a class="navbar-brand disabled" style="color:white" href="/request_page">Requests ({{ req }})</a>
 
 {%endif%}
 <a href="{% url 'user_profile' user_id=user.id %}" >
