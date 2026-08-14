@@ -1,4 +1,0 @@
-SELECT table_name FROM user_tables;
-SELECT * FROM auth_user;
-SELECT * FROM my_app_userdata;
-SELECT * FROM my_app_messagedata;
