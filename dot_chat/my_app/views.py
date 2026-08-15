@@ -19,7 +19,6 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 
 def index(request):
-    # Clear all session data
     session_keys = ['user_id', 'username', 'user_email']
     for key in session_keys:
         if key in request.session:
@@ -55,7 +54,6 @@ def home(request):
             user.status = 'pending_received'
             req += 1
 
-    # Get friend IDs
     friend_ids = FriendListDATA.objects.filter(
         Q(user_id=user_id, status='friend') | 
         Q(friend_id=user_id, status='friend')
@@ -72,12 +70,10 @@ def home(request):
     unseen_messages = set(MessageData.objects.filter(
         receiver_id=user_id, seen=False).values_list('sender_id', flat=True))
     
-    # Separate friends with and without messages
     friends_with_messages = []
     friends_without_messages = []
     
     for user in friends:
-        # Get the latest message between current user and this friend
         latest_message = MessageData.objects.filter(
             Q(sender_id=user.id, receiver_id=user_id) |
             Q(sender_id=user_id, receiver_id=user.id)
@@ -91,10 +87,8 @@ def home(request):
             user.latest_message_text = "No messages yet"
             friends_without_messages.append(user)
     
-    # Sort friends with messages by time (most recent first)
     friends_with_messages.sort(key=lambda x: x.latest_message_time, reverse=True)
     
-    # Combine: users with messages first (sorted by recent time), then users without messages
     friends_with_time = friends_with_messages + friends_without_messages
     
     user = UserData.objects.get(id=user_id)
@@ -118,15 +112,12 @@ def search_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         
-        # Fix: Check if username is None or empty
-        if not username:  # This handles None, empty string, or whitespace
+        if not username:
             messages.warning(request, 'Please enter a username to search')
             return render(request, 'search_page.html', {'user': current_user, 'users': []})
         
-        # Search for users containing the search term
         users = UserData.objects.filter(username__icontains=username)
         
-        # Initialize lists
         self_user = []
         friend_users = []
         pending_received_users = []
@@ -135,27 +126,23 @@ def search_page(request):
         req = 0
         
         for user in users:
-            # Check if they are friends (any direction)
             friend = FriendListDATA.objects.filter(
                 Q(user_id=current_user_id, friend_id=user.id) | 
                 Q(user_id=user.id, friend_id=current_user_id)
             ).first()
             
-            # Check pending sent by current user
             pending_sent = FriendListDATA.objects.filter(
                 user_id=current_user_id, 
                 friend_id=user.id, 
                 status='pending'
             ).exists()
             
-            # Check pending received by current user
             pending_received = FriendListDATA.objects.filter(
                 user_id=user.id, 
                 friend_id=current_user_id, 
                 status='pending'
             ).exists()
             
-            # Categorize the user
             if user.id == current_user_id:
                 user.status = 'self'
                 self_user.append(user)
@@ -173,7 +160,6 @@ def search_page(request):
                 user.status = 'none'
                 no_status_users.append(user)
         
-        # Order: self (current user) first, then friends, then pending, then others
         ordered_users = self_user + friend_users + pending_received_users + pending_sent_users + no_status_users
         
         if not ordered_users:
@@ -182,7 +168,7 @@ def search_page(request):
     return render(request, 'search_page.html', {
         'user': current_user,
         'users': ordered_users,
-        'req': req if request.method == 'POST' else 0  # Optional: pass req count to template
+        'req': req if request.method == 'POST' else 0
     })
 
 
@@ -192,7 +178,6 @@ def user_profile(request, user_id):
     
     user = UserData.objects.get(id=user_id)
     
-    # Get friend relationships
     friend_list = FriendListDATA.objects.filter(
         Q(user_id=user_id, status='friend') |
         Q(friend_id=user_id, status='friend')
@@ -205,7 +190,6 @@ def user_profile(request, user_id):
         else:
             friend_ids.add(friendship.user_id)
             
-    # Determine friend status
     current_user_id = request.session.get('user_id')
     if user_id == current_user_id:
         friend_status = "self"
@@ -224,8 +208,7 @@ def user_profile(request, user_id):
     ).exists():
         friend_status = "pending_received"
     else:
-        # ✅ ADD THIS - Handle "no relationship" case
-        friend_status = "none"  # or "not_friends" or "no_status"
+        friend_status = "none"
     
     return render(request, 'user_profile_page.html', {
         'user': user,
@@ -252,7 +235,6 @@ def friend_list(request, user_id):
     
     friends_idx = UserData.objects.filter(id__in=friends_ids)
     
-    # Categorize users
     self_user = []
     friend_users = []
     pending_received_users = []
@@ -308,7 +290,6 @@ def request_page(request):
     
     user_id = request.session.get('user_id')
     
-    # Get friend IDs
     friend_ids = FriendListDATA.objects.filter(
         Q(user_id=user_id, status='friend') | 
         Q(friend_id=user_id, status='friend')
@@ -321,7 +302,6 @@ def request_page(request):
     all_friend_ids = set(friend_ids) | set(friend_ids_from_others)
     all_friend_ids.discard(user_id)
     
-    # Get non-friend users
     users = UserData.objects.exclude(id=user_id).exclude(id__in=all_friend_ids)
     req = 0
     
@@ -386,31 +366,26 @@ def edit_username(request, user_id):
     if 'user_id' not in request.session:
         return redirect('login')
     
-    # Check if the user is trying to edit their own profile
     if user_id != request.session.get('user_id'):
-        return redirect('home')  # or show error
+        return redirect('home')
     
-    # Get the user object first
     user = UserData.objects.get(id=request.session.get('user_id'))
     
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         
-        # Check if username already exists (excluding current user)
         if UserData.objects.exclude(id=user.id).filter(username=username).exists():
-            # Handle duplicate username
             return render(request, 'edit_username.html', {
                 'user_id': user_id,
                 'user': user,
                 'error': 'Username already taken'
             })
         
-        # Update username if it's valid
-        if username:  # Make sure username is not empty
+        if username:
             user.username = username
             user.save()
             messages.success(request, 'Username updated successfully!')
-            return redirect('edit_page', user_id=user.id)  # Redirect to edit page
+            return redirect('edit_page', user_id=user.id)
     
     return render(request, 'edit_username.html', {
         'user_id': user_id,
@@ -422,7 +397,6 @@ def verify_password(request,user_id):
     if 'user_id' not in request.session:
         return redirect('login')
         
-        # Check if the user is trying to edit their own profile
     if user_id != request.session.get('user_id'):
         return redirect('home')
     user = UserData.objects.get(id=request.session.get('user_id'))
@@ -443,7 +417,6 @@ def edit_password(request, user_id):
     if 'user_id' not in request.session:
         return redirect('login')
     
-    # Check if the user is trying to edit their own profile
     if user_id != request.session.get('user_id'):
         return redirect('home')
     
@@ -451,9 +424,8 @@ def edit_password(request, user_id):
     
     if request.method == 'POST':
         password = request.POST.get('password', '').strip()
-        confirm_password = request.POST.get('confirm_password', '').strip()  # Fixed field name
+        confirm_password = request.POST.get('confirm_password', '').strip()
         
-        # Validate password
         if not password:
             messages.error(request, 'Password is required.')
         elif len(password) < 8:
@@ -469,11 +441,10 @@ def edit_password(request, user_id):
         elif password != confirm_password:
             messages.error(request, 'Passwords do not match.')
         else:
-            # All validations passed
             user.password = make_password(password)
             user.save()
             messages.success(request, 'Password updated successfully!')
-            return redirect('edit_page', user_id=user.id)  # Redirect to edit page with success message
+            return redirect('edit_page', user_id=user.id)
     
     return render(request, 'edit_password.html', {
         'user_id': user_id,
@@ -506,7 +477,6 @@ def verify_password_otp(request,user_id):
     if 'user_id' not in request.session:
                 return redirect('login')
             
-            # Check if the user is trying to edit their own profile
     if user_id != request.session.get('user_id'):
         return redirect('home') 
     user = UserData.objects.get(id=request.session.get('user_id'))
@@ -526,11 +496,9 @@ def edit_email(request, user_id):
     if 'user_id' not in request.session:
         return redirect('login')
     
-    # Check if the user is trying to edit their own profile
     if user_id != request.session.get('user_id'):
-        return redirect('home')  # or show error
+        return redirect('home')
     
-    # Get the user object first
     user = UserData.objects.get(id=request.session.get('user_id'))
     
     if request.method == 'POST':
@@ -582,7 +550,6 @@ def register_page(request):
         
         errors = {}
         
-        # Validate username
         if not username:
             errors['username'] = 'Username is required.'
         elif UserData.objects.filter(username=username).exists():
@@ -592,7 +559,6 @@ def register_page(request):
         elif not re.match(r'^[a-zA-Z0-9_]+$', username):
             errors['username'] = 'Username can only contain letters, numbers, and underscores.'
         
-        # Validate email
         if not email:
             errors['email'] = 'Email is required.'
         elif UserData.objects.filter(email=email).exists():
@@ -600,7 +566,6 @@ def register_page(request):
         elif not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
             errors['email'] = 'Please enter a valid email address.'
         
-        # Validate password
         if not password:
             errors['password'] = 'Password is required.'
         elif len(password) < 8:
@@ -614,7 +579,6 @@ def register_page(request):
         elif not any(char.isdigit() for char in password):
             errors['password'] = 'Password must contain at least one number.'
         
-        # Validate confirm password
         if not confirm_password:
             errors['confirm_password'] = 'Please confirm your password.'
         elif password and confirm_password and password != confirm_password:
@@ -687,14 +651,13 @@ def login_page(request):
         try:
             user_data = UserData.objects.get(username=username)
             if check_password(password, user_data.password):
-                # Check if user is verified FIRST
                 if not user_data.is_verified:
                     otp = str(random.randint(100000, 999999))
                     user_data.verified_otp=otp
                     user_data.save()
                     request.session['otp'] = otp
                     request.session['email']=user_data.email
-                    request.session['user_id'] = user_data.id  # ✅ Set session BEFORE redirect
+                    request.session['user_id'] = user_data.id
                     email_message = f"Your verification code is: {otp}"
                     send_mail(
                         "Email Verification Code",
@@ -706,7 +669,6 @@ def login_page(request):
                     messages.warning(request, 'Please verify your email first.')
                     return redirect('verify_otp', user_id=user_data.id)
                 
-                # User is verified, proceed with login
                 request.session['user_id'] = user_data.id
                 request.session['username'] = user_data.username
                 return redirect('home')
@@ -733,7 +695,6 @@ def message_page(request, receiver_id):
     sender = UserData.objects.get(id=sender_id)
     receiver = UserData.objects.get(id=receiver_id)
     
-    # Mark messages as seen
     pending_messages = MessageData.objects.filter(
         Q(sender=receiver, receiver=sender, seen=False)
     )
@@ -792,7 +753,6 @@ def add_friend(request, receiver_id):
                 existing_friendship.status = 'friend'
                 existing_friendship.save()
                 
-                # Send email notification for accepted friend request
                 try:
                     subject = f"Friend request accepted by {user.username}"
                     email_body = f"Your friend request to {user.username} has been accepted! You are now friends on Dot Chat."
@@ -812,7 +772,6 @@ def add_friend(request, receiver_id):
                 status='pending'
             )
             
-            # Send email notification for new friend request
             try:
                 subject = f"New friend request from {user.username}"
                 email_body = f"You have received a new friend request from {user.username} on Dot Chat.\n\nLog in to accept or reject this request."
