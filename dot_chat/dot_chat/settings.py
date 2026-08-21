@@ -86,14 +86,29 @@ WSGI_APPLICATION = 'dot_chat.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dot_chat',
+#         'USER': 'postgres',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
+# }
+
+from decouple import config
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dot_chat',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',  # Aiven requires SSL/TLS connections[citation:12]
+        },
     }
 }
 
@@ -152,7 +167,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'dotchat06@gmail.com'  # Your Gmail
-EMAIL_HOST_PASSWORD = 'xlasaqeynwsmgrsy'  # App Password from Google
+EMAIL_HOST_PASSWORD = 'lgcvfkejupvoqljp'  # App Password from Google
 EMAIL_OTP_EXPIRY_MINUTES = 5
 
 # Session settings for OTP
