@@ -18,7 +18,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-+26y#urk+&##=0k!s^z8l+aah7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = ['*', 'dot-chat-8v5y.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
