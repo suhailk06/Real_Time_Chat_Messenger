@@ -44,4 +44,4 @@ integrated with the Django backend.
 1. Clone the repository:
    ```bash
    git clone https://github.com/suhailk06/Real_Time_Chat_Messenger.git
-   cd dot-chat
+   cd Real_Time_Chat_Messenger\dot_chat
