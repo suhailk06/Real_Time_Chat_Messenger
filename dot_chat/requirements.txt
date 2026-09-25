@@ -1,4 +1,5 @@
 asgiref==3.12.1
+async-timeout==5.0.1
 attrs==26.1.0
 autobahn==24.4.2
 Automat==25.4.16
@@ -16,6 +17,7 @@ Incremental==24.11.0
 msgpack==1.2.1
 numpy==2.2.6
 packaging==26.3
+psycopg2==2.9.12
 psycopg2-binary==2.9.12
 pycparser==3.0
 pyOpenSSL==26.4.0
