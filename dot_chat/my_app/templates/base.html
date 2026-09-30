@@ -30,8 +30,6 @@
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 25px;
             }
-
-            /* ===== Media Queries ===== */
             @media (max-width: 768px) {
                 .navbar {
                     margin-top: 10px;
@@ -42,7 +40,7 @@
                 .navbar-brand img {
                     width: 40px;
                 }
-                /* Make the back button smaller on tablets */
+             
                 a[href="{% url 'home' %}"] img,
                 a[href="/"] img {
                     width: 70px;
@@ -60,7 +58,7 @@
                 .navbar-brand img {
                     width: 34px;
                 }
-                /* Stack navbar contents nicely */
+        
                 .navbar .container-fluid {
                     flex-wrap: wrap;
                     gap: 0.25rem;
@@ -70,12 +68,12 @@
                     align-items: center;
                     gap: 0.4rem;
                 }
-                /* Smaller back button */
+             
                 a[href="{% url 'home' %}"] img,
                 a[href="/"] img {
                     width: 55px;
                 }
-                /* Smaller nav icons */
+                
                 .navbar i {
                     font-size: 0.9rem;
                 }
