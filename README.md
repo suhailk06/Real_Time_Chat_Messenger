@@ -1,4 +1,4 @@
-# DOT CHAT || Real-Time Chat Messenger
+# DOT CHAT || Real-Time Chat Messenger || <a href="https://dot-chat-project.vercel.app/">Deployment Link</a>
 
 A Django-based real-time chat platform with user authentication, 
 friend management, profiles, and instant messaging.
