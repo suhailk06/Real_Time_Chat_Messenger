@@ -221,5 +221,111 @@ document.getElementById('messageForm').addEventListener('submit', function() {
 .message-form button:hover {
     background: #2d52b1;
 }
+/* ===== Media Queries ===== */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .left {
+        height: auto;
+        min-height: 220px;
+    }
+    .left img {
+        width: 180px !important;
+        height: auto;
+    }
+    .left h1 {
+        font-size: 1.3rem;
+    }
+    .messages-container {
+        height: 320px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .left, .right {
+        border-radius: 20px;
+        padding: 12px;
+    }
+    .left img {
+        width: 130px !important;
+    }
+    .left h1 {
+        font-size: 1.1rem;
+    }
+    .messages-container {
+        height: 280px;
+        padding: 10px;
+        border-radius: 20px;
+    }
+    .message.sent {
+        margin-left: 20px;
+    }
+    .message.received {
+        margin-right: 20px;
+    }
+    .message p {
+        font-size: 0.9rem;
+    }
+    .message small {
+        font-size: 0.7rem;
+    }
+    .message-form .form-row {
+        flex-direction: column;
+    }
+    .message-form textarea {
+        width: 100%;
+        height: 60px;
+        border-radius: 20px;
+    }
+    .message-form button {
+        width: 100%;
+        height: 44px;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .left, .right {
+        border-radius: 16px;
+        padding: 10px;
+    }
+    .left img {
+        width: 100px !important;
+    }
+    .left h1 {
+        font-size: 1rem;
+    }
+    .messages-container {
+        height: 240px;
+        padding: 8px;
+    }
+    .message {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+    .message.sent {
+        margin-left: 10px;
+    }
+    .message.received {
+        margin-right: 10px;
+    }
+    .message p {
+        font-size: 0.82rem;
+    }
+    .message-form textarea {
+        font-size: 0.85rem;
+    }
+    .message-form button {
+        font-size: 0.85rem;
+    }
+}
 </style>
 {% endblock %}

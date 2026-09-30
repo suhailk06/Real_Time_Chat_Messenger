@@ -186,6 +186,60 @@
         .mb-3 {
             margin-bottom: 1.25rem;
         }
+        /* ===== Media Queries ===== */
+@media (max-width: 576px) {
+    .verify-card,
+    .profile-card,
+    .login-card,
+    .register-card {
+        border-radius: 22px;
+        padding: 1.8rem 1.2rem;
+    }
+    .verify-card h1,
+    .profile-card h1,
+    .login-card h2,
+    .register-card h2 {
+        font-size: 1.4rem;
+    }
+    .verify-card input,
+    .profile-card input,
+    .login-card input,
+    .register-card input {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+    .verify-card .btn,
+    .profile-card .btn,
+    .login-card .btn-dark,
+    .register-card .btn-dark {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+    }
+    a[href="{% url 'home' %}"] img,
+    a[href="/"] img {
+        width: 60px;
+    }
+}
+
+@media (max-width: 380px) {
+    .verify-card,
+    .profile-card,
+    .login-card,
+    .register-card {
+        padding: 1.4rem 1rem;
+        border-radius: 18px;
+    }
+    .verify-card h1,
+    .profile-card h1,
+    .login-card h2,
+    .register-card h2 {
+        font-size: 1.2rem;
+    }
+    a[href="{% url 'home' %}"] img,
+    a[href="/"] img {
+        width: 48px;
+    }
+}
     </style>
 </head>
 <body>

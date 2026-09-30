@@ -16,24 +16,84 @@
             body{
                 background-image: url({% static 'images/dot_chat_background.png' %});
                 background-attachment: fixed;
-            background-size: cover;
-            background-position: center;
-  
+                background-size: cover;
+                background-position: center;
             }
             .navbar{
-              margin-top: 20px;
-              margin-left: 20px;
-              margin-right: 20px;
-background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-              
+                margin-top: 20px;
+                margin-left: 20px;
+                margin-right: 20px;
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 25px;
             }
-            
-            </style>
+
+            /* ===== Media Queries ===== */
+            @media (max-width: 768px) {
+                .navbar {
+                    margin-top: 10px;
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    border-radius: 18px;
+                }
+                .navbar-brand img {
+                    width: 40px;
+                }
+                /* Make the back button smaller on tablets */
+                a[href="{% url 'home' %}"] img,
+                a[href="/"] img {
+                    width: 70px;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .navbar {
+                    margin-top: 8px;
+                    margin-left: 8px;
+                    margin-right: 8px;
+                    border-radius: 14px;
+                    padding: 0.25rem 0.5rem;
+                }
+                .navbar-brand img {
+                    width: 34px;
+                }
+                /* Stack navbar contents nicely */
+                .navbar .container-fluid {
+                    flex-wrap: wrap;
+                    gap: 0.25rem;
+                }
+                .navbar .container-fluid > div {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.4rem;
+                }
+                /* Smaller back button */
+                a[href="{% url 'home' %}"] img,
+                a[href="/"] img {
+                    width: 55px;
+                }
+                /* Smaller nav icons */
+                .navbar i {
+                    font-size: 0.9rem;
+                }
+                .navbar h1 {
+                    font-size: 1rem;
+                }
+            }
+
+            @media (max-width: 380px) {
+                .navbar-brand img {
+                    width: 28px;
+                }
+                a[href="{% url 'home' %}"] img,
+                a[href="/"] img {
+                    width: 45px;
+                }
+            }
+        </style>
     </head>
     <body>
 
