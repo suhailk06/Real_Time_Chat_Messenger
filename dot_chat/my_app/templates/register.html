@@ -32,7 +32,6 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             max-width: 520px;
             width: 100%;
-            height:100%;
             text-align: center;
         }
 
@@ -87,32 +86,6 @@
             box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
         }
 
-        #password {
-            width: 90%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            font-size: 15px;
-            color: #2d3436;
-            transition: all 0.3s ease;
-            outline: none;
-            backdrop-filter: blur(5px);
-        }
-
-        #confirm_password {
-            width: 90%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            font-size: 15px;
-            color: #2d3436;
-            transition: all 0.3s ease;
-            outline: none;
-            backdrop-filter: blur(5px);
-        }
-
         .form-input::placeholder {
             color: #a0aec0;
             font-weight: 400;
@@ -142,6 +115,7 @@
             cursor: pointer;
             padding: 5px;
             transition: all 0.3s ease;
+            z-index: 2;
         }
 
         .password-toggle:hover {
@@ -198,7 +172,7 @@
         }
 
         .btn-dark {
-            background-image: url({% static 'images/dot_chat_background.png' %});
+            background: linear-gradient(135deg, #6c5ce7, #4a3db8);
             border: none;
             padding: 12px 40px;
             border-radius: 12px;
@@ -210,6 +184,11 @@
             margin-top: 10px;
         }
 
+        .btn-dark:hover {
+            background: linear-gradient(135deg, #5b4bd6, #3a2da8);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+        }
 
         .btn-dark i {
             margin-right: 8px;
@@ -262,70 +241,70 @@
             backdrop-filter: blur(5px);
         }
 
-       /* ===== Media Queries ===== */
-@media (max-width: 576px) {
-    .verify-card,
-    .profile-card,
-    .login-card,
-    .register-card {
-        border-radius: 22px;
-        padding: 1.8rem 1.2rem;
-    }
-    .verify-card h1,
-    .profile-card h1,
-    .login-card h2,
-    .register-card h2 {
-        font-size: 1.4rem;
-    }
-    .verify-card input,
-    .profile-card input,
-    .login-card input,
-    .register-card input {
-        font-size: 0.9rem;
-        padding: 10px 12px;
-    }
-    .verify-card .btn,
-    .profile-card .btn,
-    .login-card .btn-dark,
-    .register-card .btn-dark {
-        padding: 10px 24px;
-        font-size: 0.9rem;
-    }
-    a[href="{% url 'home' %}"] img,
-    a[href="/"] img {
-        width: 60px;
-    }
-}
+        /* ===== Media Queries ===== */
+        @media (max-width: 576px) {
+            .verify-card,
+            .profile-card,
+            .login-card,
+            .register-card {
+                border-radius: 22px;
+                padding: 1.8rem 1.2rem;
+            }
+            .verify-card h1,
+            .profile-card h1,
+            .login-card h2,
+            .register-card h2 {
+                font-size: 1.4rem;
+            }
+            .verify-card input,
+            .profile-card input,
+            .login-card input,
+            .register-card input {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+            .verify-card .btn,
+            .profile-card .btn,
+            .login-card .btn-dark,
+            .register-card .btn-dark {
+                padding: 10px 24px;
+                font-size: 0.9rem;
+            }
+            a[href="{% url 'home' %}"] img,
+            a[href="/"] img {
+                width: 60px;
+            }
+        }
 
-@media (max-width: 380px) {
-    .verify-card,
-    .profile-card,
-    .login-card,
-    .register-card {
-        padding: 1.4rem 1rem;
-        border-radius: 18px;
-    }
-    .verify-card h1,
-    .profile-card h1,
-    .login-card h2,
-    .register-card h2 {
-        font-size: 1.2rem;
-    }
-    a[href="{% url 'home' %}"] img,
-    a[href="/"] img {
-        width: 48px;
-    }
-}
+        @media (max-width: 380px) {
+            .verify-card,
+            .profile-card,
+            .login-card,
+            .register-card {
+                padding: 1.4rem 1rem;
+                border-radius: 18px;
+            }
+            .verify-card h1,
+            .profile-card h1,
+            .login-card h2,
+            .register-card h2 {
+                font-size: 1.2rem;
+            }
+            a[href="{% url 'home' %}"] img,
+            a[href="/"] img {
+                width: 48px;
+            }
+        }
     </style>
 </head>
 <body>
-      <a href="/" style="position: fixed; ">
-    <img src="{% static 'images/back_button.png' %}" width="100" alt="Back to Home">
-</a>
+    <a href="/" style="position: fixed;">
+        <img src="{% static 'images/back_button.png' %}" width="100" alt="Back to Home">
+    </a>
     <div class="container d-flex justify-content-center" style="min-height: 100vh; padding-top: 2rem; padding-bottom: 2rem;">
         <div class="register-card">
             <h2><i class="fas fa-user-plus me-2"></i>Create Account</h2>
-            
+
             <!-- Display messages -->
             {% if messages %}
                 <div class="alert-container">
@@ -337,59 +316,55 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            
+
             <form method="post" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
-                
+
                 <!-- Username Field -->
                 <div class="mb-3">
                     <label for="username" class="form-label">
                         <i class="fas fa-user me-2"></i>Username
                     </label>
-                    <input type="text" 
-                           name="username" 
-                           id="username" 
+                    <input type="text"
+                           name="username"
+                           id="username"
                            value="{{ username|default:'' }}"
-                           class="{% if errors.username %}error{% endif %}"
+                           class="form-input {% if errors.username %}error{% endif %}"
                            placeholder="Choose a username"
                            required>
                     {% if errors.username %}
                         <div class="error-message">{{ errors.username }}</div>
                     {% endif %}
-<<<<<<< HEAD
-                    <div class="help-text">min 5 characters. Letters, digits and underscores only.</div>
-=======
                     <div class="help-text">5+ characters. Letters, digits and underscores only.</div>
->>>>>>> 4ef70f3821af63381ccff95cb5b0786f4f4a7e65
                 </div>
-                
+
                 <!-- Email Field -->
                 <div class="mb-3">
                     <label for="email" class="form-label">
                         <i class="fas fa-envelope me-2"></i>Email
                     </label>
-                    <input type="email" 
-                           name="email" 
-                           id="email" 
+                    <input type="email"
+                           name="email"
+                           id="email"
                            value="{{ email|default:'' }}"
-                           class="{% if errors.email %}error{% endif %}"
+                           class="form-input {% if errors.email %}error{% endif %}"
                            placeholder="Enter your email"
                            required>
                     {% if errors.email %}
                         <div class="error-message">{{ errors.email }}</div>
                     {% endif %}
                 </div>
-                
+
                 <!-- Password Field -->
                 <div class="mb-3">
                     <label for="password" class="form-label">
                         <i class="fas fa-lock me-2"></i>Password
                     </label>
                     <div class="field-wrapper">
-                        <input type="password" 
-                               name="password" 
+                        <input type="password"
+                               name="password"
                                id="password"
-                               class="{% if errors.password %}error{% endif %}"
+                               class="form-input {% if errors.password %}error{% endif %}"
                                placeholder="Create a password"
                                required>
                         <button type="button" class="password-toggle" onclick="togglePassword('password', this)">
@@ -399,7 +374,7 @@
                     {% if errors.password %}
                         <div class="error-message">{{ errors.password }}</div>
                     {% endif %}
-                    
+
                     <!-- Password Requirements -->
                     <div class="password-requirements">
                         <p>Password must contain:</p>
@@ -422,17 +397,17 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <!-- Confirm Password Field -->
                 <div class="mb-3">
                     <label for="confirm_password" class="form-label">
                         <i class="fas fa-check-circle me-2"></i>Confirm Password
                     </label>
                     <div class="field-wrapper">
-                        <input type="password" 
-                               name="conform_password" 
+                        <input type="password"
+                               name="confirm_password"
                                id="confirm_password"
-                               class="{% if errors.confirm_password %}error{% endif %}"
+                               class="form-input {% if errors.confirm_password %}error{% endif %}"
                                placeholder="Confirm your password"
                                required>
                         <button type="button" class="password-toggle" onclick="togglePassword('confirm_password', this)">
@@ -443,11 +418,11 @@
                         <div class="error-message">{{ errors.confirm_password }}</div>
                     {% endif %}
                 </div>
-                
+
                 <button type="submit" class="btn btn-dark">
                     <i class="fas fa-user-plus me-2"></i>Register
                 </button>
-                
+
                 <!-- Login Link -->
                 <div class="login-link">
                     Already have an account? <a href="/login">Login here</a>
@@ -455,15 +430,15 @@
             </form>
         </div>
     </div>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         function togglePassword(inputId, button) {
             const input = document.getElementById(inputId);
             const icon = button.querySelector('i');
-            
+
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.className = 'fas fa-eye-slash';
@@ -472,12 +447,12 @@
                 icon.className = 'fas fa-eye';
             }
         }
-        
+
         // Real-time password validation
         document.addEventListener('DOMContentLoaded', function() {
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirm_password');
-            
+
             const requirements = {
                 length: document.getElementById('req-length'),
                 uppercase: document.getElementById('req-uppercase'),
@@ -485,7 +460,7 @@
                 digit: document.getElementById('req-digit'),
                 notnumeric: document.getElementById('req-notnumeric')
             };
-            
+
             function validatePassword(value) {
                 // Length check
                 if (value.length >= 8) {
@@ -495,7 +470,7 @@
                     requirements.length.className = 'invalid';
                     requirements.length.innerHTML = '<span class="check">✗</span> At least 8 characters';
                 }
-                
+
                 // Uppercase check
                 if (/[A-Z]/.test(value)) {
                     requirements.uppercase.className = 'valid';
@@ -504,7 +479,7 @@
                     requirements.uppercase.className = 'invalid';
                     requirements.uppercase.innerHTML = '<span class="check">✗</span> At least one uppercase letter';
                 }
-                
+
                 // Lowercase check
                 if (/[a-z]/.test(value)) {
                     requirements.lowercase.className = 'valid';
@@ -513,7 +488,7 @@
                     requirements.lowercase.className = 'invalid';
                     requirements.lowercase.innerHTML = '<span class="check">✗</span> At least one lowercase letter';
                 }
-                
+
                 // Digit check
                 if (/\d/.test(value)) {
                     requirements.digit.className = 'valid';
@@ -522,7 +497,7 @@
                     requirements.digit.className = 'invalid';
                     requirements.digit.innerHTML = '<span class="check">✗</span> At least one number';
                 }
-                
+
                 // Not entirely numeric check
                 if (value && !/^\d+$/.test(value)) {
                     requirements.notnumeric.className = 'valid';
@@ -532,10 +507,10 @@
                     requirements.notnumeric.innerHTML = '<span class="check">✗</span> Cannot be entirely numeric';
                 }
             }
-            
+
             password.addEventListener('input', function() {
                 validatePassword(this.value);
-                
+
                 // Check password match in real-time
                 if (confirmPassword.value && this.value !== confirmPassword.value) {
                     confirmPassword.classList.add('error');
@@ -543,7 +518,7 @@
                     confirmPassword.classList.remove('error');
                 }
             });
-            
+
             confirmPassword.addEventListener('input', function() {
                 const passwordValue = password.value;
                 if (passwordValue && this.value && passwordValue !== this.value) {
